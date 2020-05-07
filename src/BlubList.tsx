@@ -2,8 +2,9 @@ import * as React from "react";
 import "./BulbList.scss";
 import styled, {keyframes} from "styled-components";
 import {darken} from "polished";
+import {prototype} from "stream";
 
-export interface IBulbListProps {
+interface IBulbListProps {
   bulbCount: number;
   bulbColors?: string[];
 }
@@ -45,21 +46,27 @@ export const BulbList = (props: IBulbListProps) => {
 
   setKeyFrames();
 
-  let keyFramesStyle = ''
+  let keyFramesStyle = "";
 
-  if(props.bulbColors !== undefined){
-    keyFramesList.forEach((keyframes, i) => {
+  keyFramesList.forEach((keyframes, i) => {
+    if (props.bulbColors && props.bulbColors[i]) {
       keyFramesStyle += `
-      li:nth-child(${2*i+1}{
-        backgroud: rgba(${props.bulbColors[i]})
-      })
-      `
-    })
-  }
+        li:nth-child(${2 * (i + 1) + "n+" + 1}){
+          backgroud: rgba(${props.bulbColors[i]})
+        }
+        `;
+    }
+  });
+
+  console.log(keyFramesStyle);
 
   const LiStyledWrapper = styled.li`
     ${keyFramesStyle}
   `;
 
-  return <ul className='lightrope'> {createBulbList()}</ul>;
+  return (
+    <LiStyledWrapper>
+      <ul className='lightrope'> {createBulbList()}</ul>
+    </LiStyledWrapper>
+  );
 };
