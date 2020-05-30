@@ -1,15 +1,12 @@
 import * as React from "react";
 import "./BulbList.scss";
-import styled, {keyframes} from "styled-components";
+import styled, {css, keyframes} from "styled-components";
 import {darken} from "polished";
-import {prototype} from "stream";
 
 interface IBulbListProps {
   bulbCount: number;
-  bulbColors?: string[];
+  bulbColors: string[];
 }
-
-const keyFramesList: any[] = [];
 
 const globeWidth = 12;
 const globeHeight = 28;
@@ -18,55 +15,83 @@ const globeSpread = 3;
 const lightOffOpacity = 0.4;
 
 export const BulbList = (props: IBulbListProps) => {
-  const setKeyFrames = () => {
-    props.bulbColors?.forEach((color) => {
-      const flash = keyframes`{
-        0%, 100% { 
-          backgroud: rgba(${color});
-          box-shadow: 0px ${globeHeight / 6} ${
-        globeWidth * 2
-      } ${globeSpread} rgba(${darken(0.2, color)});
-        }
-        50% { 
-          backgroud: rgba(${color},lightOffOpacity);
-          box-shadow: 0px ${globeHeight / 6} ${
-        globeWidth * 2
-      } ${globeSpread} rgba(${darken(0.2, color)});
-        }
-      }`;
-      keyFramesList.push(flash);
-    });
-  };
-
+  /**
+   * return bulbList
+   */
   const createBulbList = () => {
     return Array.from(Array(props.bulbCount)).map((v, i: number) => {
-      return <li key={i}></li>;
+      return <li key={i}>{i}</li>;
     });
   };
 
-  setKeyFrames();
-
   let keyFramesStyle = "";
+  const keyf = keyframes`{
+    from{
+      transform: rotate(0deg);
+    }
+    to{
+      transform: rotate(360deg);
+    }
+  }`;
+  props.bulbColors.forEach((color, i) => {
+    const index = i % props.bulbColors.length;
 
-  keyFramesList.forEach((keyframes, i) => {
-    if (props.bulbColors && props.bulbColors[i]) {
-      keyFramesStyle += `
-        li:nth-child(${2 * (i + 1) + "n+" + 1}){
-          backgroud: rgba(${props.bulbColors[i]})
+    const flash = keyframes`{
+       0%, 100% { 
+        background: ${color};
+        box-shadow: 0px ${globeHeight / 6}px ${
+      globeWidth * 2
+    }px ${globeSpread}px ${darken(0.2, color)};
+      }
+      50% { 
+        background: ${color};
+        box-shadow: 0px ${globeHeight / 6}px ${
+      globeWidth * 2
+    }px ${globeSpread}px ${darken(0.2, color)};
+      } 
+    }`;
+
+    console.log(index);
+    keyFramesStyle += `
+        &:nth-child(${2 * (i + 1) + "n+" + i}){
+          animation: ${()=> css`${keyf} 1s linear infinite;`};
+          background: ${color};
+          box-shadow: 0px ${globeHeight / 6}px ${
+            globeWidth * 2
+          }px ${globeSpread}px ${color};
         }
         `;
-    }
   });
 
   console.log(keyFramesStyle);
 
-  const LiStyledWrapper = styled.li`
-    ${keyFramesStyle}
+  const UlStyledWrapper = styled.ul`
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    z-index: 1;
+    margin: -15px 0 0 0;
+    padding: 0;
+    pointer-events: none;
+    width: 100%;
+    background-color: black;
+    & > li {
+      position: relative;
+      animation-fill-mode: both;
+      animation-iteration-count: infinite;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: block;
+      width: ${globeWidth}px;
+      height: ${globeHeight}px;
+      border-radius: 50%;
+      margin: ${globeSpacing / 2}px;
+      display: inline-block;
+      ${keyFramesStyle}
+    }
   `;
 
-  return (
-    <LiStyledWrapper>
-      <ul className='lightrope'> {createBulbList()}</ul>
-    </LiStyledWrapper>
-  );
+  return <UlStyledWrapper>{createBulbList()}</UlStyledWrapper>;
 };
