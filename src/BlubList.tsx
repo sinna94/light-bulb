@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./BulbList.scss";
 import styled, {keyframes} from "styled-components";
-import {darken} from "polished";
+import {transparentize, opacify, rgba} from "polished";
 import {prototype} from "stream";
 
 interface IBulbListProps {
@@ -18,55 +18,44 @@ const globeSpread = 3;
 const lightOffOpacity = 0.4;
 
 export const BulbList = (props: IBulbListProps) => {
+  const styleSheet = document.styleSheets[0] as CSSStyleSheet;
+  console.log(styleSheet);
+  console.log(opacify(lightOffOpacity, "#f70094"));
   const setKeyFrames = () => {
-    props.bulbColors?.forEach((color) => {
-      const flash = keyframes`{
+    props.bulbColors?.forEach((color, index) => {
+      // FixMe: box-shadow 적용 안 됨
+      const flash = `@keyframes animation-${index} {
         0%, 100% { 
-          backgroud: rgba(${color});
-          box-shadow: 0px ${globeHeight / 6} ${
-        globeWidth * 2
-      } ${globeSpread} rgba(${darken(0.2, color)});
+          background: ${rgba(color, 1)};
+          box-shadow: 0px ${globeHeight / 6}px ${globeWidth * 2}px ${globeSpread}px ${rgba(color, 1)});
         }
         50% { 
-          backgroud: rgba(${color},lightOffOpacity);
-          box-shadow: 0px ${globeHeight / 6} ${
-        globeWidth * 2
-      } ${globeSpread} rgba(${darken(0.2, color)});
+          box-shadow: 0px ${globeHeight / 6}px ${
+            globeWidth * 2
+          }px ${globeSpread}px ${rgba(color, 0.2)};
+          background: ${rgba(color, lightOffOpacity)};
         }
       }`;
-      keyFramesList.push(flash);
+      console.log(flash);
+      styleSheet.insertRule(flash, styleSheet.cssRules.length);
     });
   };
 
   const createBulbList = () => {
     return Array.from(Array(props.bulbCount)).map((v, i: number) => {
-      return <li key={i}></li>;
+      const style = {
+        animationName: `animation-${i % (props.bulbColors?.length ?? 0)}`,
+        animationDuration: "1s",
+      };
+      console.log(i % (props.bulbColors?.length ?? 0));
+      return <li key={i} style={style}></li>;
     });
   };
 
   setKeyFrames();
-
-  let keyFramesStyle = "";
-
-  keyFramesList.forEach((keyframes, i) => {
-    if (props.bulbColors && props.bulbColors[i]) {
-      keyFramesStyle += `
-        li:nth-child(${2 * (i + 1) + "n+" + 1}){
-          backgroud: rgba(${props.bulbColors[i]})
-        }
-        `;
-    }
-  });
-
-  console.log(keyFramesStyle);
-
-  const LiStyledWrapper = styled.li`
-    ${keyFramesStyle}
-  `;
-
   return (
-    <LiStyledWrapper>
+    <li>
       <ul className='lightrope'> {createBulbList()}</ul>
-    </LiStyledWrapper>
+    </li>
   );
 };
