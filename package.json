@@ -1,7 +1,20 @@
 {
   "name": "light-bulb",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
+  "author": {
+    "name": "ChungHyun lee",
+    "email": "sinna94@naver.com",
+    "url": "https://github.com/sinna94"
+  },
+  "description": "christmas style light bulb",
+  "main": "dist/Component/index.js",
+  "types": "dist/Component/index.d.ts",
+  "files": [
+    "dist/",
+    "package.json"
+  ],
+  "keywords": ["react", "christmas", "bulb"],
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -11,7 +24,6 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/styled-components": "^5.1.0",
-    "node-sass": "^4.13.1",
     "polished": "^3.5.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

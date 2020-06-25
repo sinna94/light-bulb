@@ -2,7 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import {BulbList} from "./BlubList";
+import {BulbList} from "./Component";
+
+export * from "./Component";
 
 ReactDOM.render(
   <React.StrictMode>

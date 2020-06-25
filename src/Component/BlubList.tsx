@@ -6,8 +6,8 @@ import {
   globeSpread,
   lightOffOpacity,
   globeSpacing,
-} from "./constants";
-import {LiWrapper} from "./LiWapper";
+} from "../constants";
+import {LiWrapper} from "./LiWrapper";
 import {UlWrapper} from "./UlWrapper";
 
 interface IBulbListProps {
