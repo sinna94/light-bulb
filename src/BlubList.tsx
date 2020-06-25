@@ -1,55 +1,92 @@
 import * as React from "react";
-import "./BulbList.scss";
 import {rgba} from "polished";
+import {
+  globeHeight,
+  globeWidth,
+  globeSpread,
+  lightOffOpacity,
+  globeSpacing,
+} from "./constants";
+import {LiWrapper} from "./LiWapper";
+import {UlWrapper} from "./UlWrapper";
 
 interface IBulbListProps {
   bulbCount: number;
   row: number;
-  bulbColors?: string[];
+  bulbs: LightBulb[];
+  height?: number;
+  spacing?: number;
 }
 
-const globeWidth = 12;
-const globeHeight = 28;
-const globeSpacing = 40;
-const globeSpread = 3;
-const lightOffOpacity = 0.4;
+export interface LightBulb {
+  color: string;
+  duration?: number;
+  width?: number;
+}
 
 const defaultColors = ["#00f7a5", "#00ffff", "#f70094"];
 
 export const BulbList = (props: IBulbListProps) => {
-  const bulbColors =
-    !props.bulbColors || props.bulbColors.length === 0
-      ? defaultColors
-      : props.bulbColors;
+  const {bulbs, height, spacing} = props;
+  const bulbsLength = props.bulbs.length;
 
+  // set styleSheet
   const styleSheet = document.styleSheets[0] as CSSStyleSheet;
+
+  // set keyFrames
   const setKeyFrames = () => {
-    bulbColors.forEach((color, index) => {
+    bulbs.forEach((bulb, index) => {
       const flash = `@keyframes animation-${index} {
         0%, 100% { 
-          box-shadow: 0px ${globeHeight / 6}px ${
-        globeWidth * 2
-      }px ${globeSpread}px ${rgba(color, 1)};
-          background: ${rgba(color, 1)};
+          box-shadow: 0px ${(height ?? globeHeight) / 6}px ${
+        (bulb.width ?? globeWidth) * 2
+      }px ${globeSpread}px ${rgba(
+        bulb.color ?? defaultColors[index % defaultColors.length],
+        1,
+      )};
+          background: ${rgba(
+            bulb.color ?? defaultColors[index % defaultColors.length],
+            1,
+          )};
         }
         50% { 
-          box-shadow: 0px ${globeHeight / 6}px ${
-        globeWidth * 2
-      }px ${globeSpread}px ${rgba(color, 0.2)};
-          background: ${rgba(color, lightOffOpacity)};
+          box-shadow: 0px ${(height ?? globeHeight) / 6}px ${
+        (bulb.width ?? globeWidth) * 2
+      }px ${globeSpread}px ${rgba(
+        bulb.color ?? defaultColors[index % defaultColors.length],
+        0.2,
+      )};
+          background: ${rgba(
+            bulb.color ?? defaultColors[index % defaultColors.length],
+            lightOffOpacity,
+          )};
         }
       }`;
       styleSheet.insertRule(flash, styleSheet.cssRules.length);
     });
   };
 
+  const getBulb = (index: number): LightBulb => {
+    return bulbs[index % bulbsLength];
+  };
+
+  // create li with style
   const createBulbList = () => {
     return Array.from(Array(props.bulbCount)).map((v, i: number) => {
+      const bulb = getBulb(i);
       const style = {
-        animationName: `animation-${i % bulbColors.length}`,
-        animationDuration: "1s",
+        animationName: `animation-${i % bulbs.length}`,
+        animationDuration: `${bulb.duration ?? 1}s`,
       };
-      return <li key={i} style={style}></li>;
+      return (
+        <LiWrapper
+          width={bulb.width ?? globeWidth}
+          height={height ?? globeHeight}
+          spacing={spacing ?? globeSpacing}
+          key={i}
+          style={style}
+        ></LiWrapper>
+      );
     });
   };
 
@@ -57,12 +94,7 @@ export const BulbList = (props: IBulbListProps) => {
 
   const createBulbRow = () => {
     return Array.from(Array(props.row)).map((v, i) => {
-      return (
-        <ul className='lightrope' key={i}>
-          {" "}
-          {createBulbList()}
-        </ul>
-      );
+      return <UlWrapper key={i}>{createBulbList()}</UlWrapper>;
     });
   };
 

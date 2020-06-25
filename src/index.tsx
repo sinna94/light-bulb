@@ -6,7 +6,15 @@ import {BulbList} from "./BlubList";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BulbList bulbCount={10} row={3} bulbColors={['#00f7a5', '#00ffff', '#f70094']} />
+    <BulbList
+      bulbCount={30}
+      row={1}
+      bulbs={[
+        {color: "#00f7a5", width: 25, duration: 0.8},
+        {color: "#00ffff", duration: 1.4},
+        {color: "#f70094", duration: 1.2},
+      ]}
+    />
   </React.StrictMode>,
   document.getElementById("root"),
 );
