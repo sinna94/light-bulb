@@ -12,7 +12,6 @@ import {UlWrapper} from "./UlWrapper";
 
 interface IBulbListProps {
   bulbCount: number;
-  row: number;
   bulbs: LightBulb[];
   height?: number;
   spacing?: number;
@@ -26,7 +25,7 @@ export interface LightBulb {
 
 const defaultColors = ["#00f7a5", "#00ffff", "#f70094"];
 
-export const BulbList = (props: IBulbListProps) => {
+export const ChristmasBulbs = (props: IBulbListProps) => {
   const {bulbs, height, spacing} = props;
   const bulbsLength = props.bulbs.length;
 
@@ -92,11 +91,5 @@ export const BulbList = (props: IBulbListProps) => {
 
   setKeyFrames();
 
-  const createBulbRow = () => {
-    return Array.from(Array(props.row)).map((v, i) => {
-      return <UlWrapper key={i}>{createBulbList()}</UlWrapper>;
-    });
-  };
-
-  return <>{createBulbRow()}</>;
+  return <UlWrapper>{createBulbList()}</UlWrapper>;
 };
