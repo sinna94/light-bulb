@@ -17,5 +17,5 @@
     "outDir": "./dist",
     "jsx": "react"
   },
-  "include": ["src/Component", "src/constants.ts"]
+  "include": ["src/Component", "src/*.ts"]
 }

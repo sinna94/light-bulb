@@ -8,13 +8,20 @@
     "url": "https://github.com/sinna94"
   },
   "description": "christmas style light bulb",
+  "prepublish": "tsc",
   "main": "dist/Component/index.js",
   "types": "dist/Component/index.d.ts",
+  "license": "MIT",
+  "repository": "https://github.com/sinna94/light-bulb",
   "files": [
     "dist/",
     "package.json"
   ],
-  "keywords": ["react", "christmas", "bulb"],
+  "keywords": [
+    "react",
+    "christmas",
+    "bulb"
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
