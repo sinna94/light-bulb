@@ -1,3 +1,5 @@
+[![Npm version](https://badge.fury.io/js/light-bulb-christmas.svg)](https://badge.fury.io/js/light-bulb-christmas)
+
 ## install
 
 ```bash
